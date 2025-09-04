@@ -1,6 +1,9 @@
 package com.example.carins.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 @Entity
@@ -15,6 +18,14 @@ public class InsurancePolicy {
     private String provider;
     private LocalDate startDate;
     private LocalDate endDate; // nullable == open-ended
+
+    @PrePersist
+    @PreUpdate
+    private void ensureEndDate() {
+        if (endDate == null && startDate != null) {
+            endDate = startDate.plusYears(1);
+        }
+    }
 
     public InsurancePolicy() {}
     public InsurancePolicy(Car car, String provider, LocalDate startDate, LocalDate endDate) {
