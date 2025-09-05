@@ -33,12 +33,6 @@ public class InsurancePolicyService {
         Car car = carRepository.findById(dto.carId())
                 .orElseThrow(() -> new NoSuchElementException("Car with id " + dto.carId() + " not found!"));
 
-        if (dto.startDate() == null) {
-            throw new IllegalArgumentException("Start date must not be null");
-        }
-        if (dto.endDate() == null) {
-            throw new IllegalArgumentException("End date must not be null");
-        }
         if (dto.startDate().isAfter(dto.endDate())) {
             throw new IllegalArgumentException("Start date must not be after end date");
         }
@@ -52,12 +46,6 @@ public class InsurancePolicyService {
         InsurancePolicy existing = policyRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Insurance policy with id " + id + " not found!"));
 
-        if (dto.startDate() == null) {
-            throw new IllegalArgumentException("Start date must not be null");
-        }
-        if (dto.endDate() == null) {
-            throw new IllegalArgumentException("End date must not be null");
-        }
         if (dto.startDate().isAfter(dto.endDate())) {
             throw new IllegalArgumentException("Start date must not be after end date");
         }

@@ -5,6 +5,7 @@ import com.example.carins.model.InsurancePolicy;
 import com.example.carins.service.InsurancePolicyService;
 import com.example.carins.web.dto.CarDto;
 import com.example.carins.web.dto.InsurancePolicyDto;
+import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class InsurancePolicyController {
     }
 
     @PostMapping("/insurance")
-    public ResponseEntity<InsurancePolicyDto> createInsurance(@RequestBody InsurancePolicyDto insuranceDto){
+    public ResponseEntity<InsurancePolicyDto> createInsurance(@Valid @RequestBody InsurancePolicyDto insuranceDto){
         InsurancePolicyDto i = insuranceService.create(insuranceDto);
         URI locationHeader = URI.create("/api/insurances/" + i.id());
 
@@ -42,7 +43,7 @@ public class InsurancePolicyController {
     }
 
     @PutMapping("insurance/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody InsurancePolicyDto dto) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody InsurancePolicyDto dto) {
             return ResponseEntity.ok(insuranceService.update(id, dto));
     }
 

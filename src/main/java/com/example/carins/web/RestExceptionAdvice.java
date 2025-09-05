@@ -19,4 +19,11 @@ public class RestExceptionAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", ex.getMessage()));
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String,Object>> handleValidation(MethodArgumentNotValidException ex){
+        Map<String,String> errors=new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(Map.of("errors", errors));
+    }
 }
