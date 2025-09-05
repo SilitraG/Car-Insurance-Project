@@ -33,13 +33,13 @@ class ClaimHistoryApiTests {
 
     @Test
     void historyWhenCarMissing() throws Exception {
-        mvc.perform(get("/api/cars/23/history"))
+        mvc.perform(get("/api/cars/999/history"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void postClaimAndHistoryIncludesIt() throws Exception {
-        var body = Map.of(
+        Map<String,Object> body = Map.of(
                 "carId", 1L,
                 "claimDate", LocalDate.parse("2025-03-15"),
                 "description", "Rear bumper",

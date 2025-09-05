@@ -48,7 +48,7 @@ class CarInsuranceApplicationTests {
 
     @Test
     void insuranceValidityCarIdNotFound() throws Exception {
-        mvc.perform(get("/api/cars/7/insurance-valid").param("date", "2025-02-01"))
+        mvc.perform(get("/api/cars/999/insurance-valid").param("date", "2025-02-01"))
                 .andExpect(status().isNotFound());
     }
 

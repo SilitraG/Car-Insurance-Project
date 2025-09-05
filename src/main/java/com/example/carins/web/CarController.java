@@ -2,11 +2,9 @@ package com.example.carins.web;
 
 import com.example.carins.model.Car;
 import com.example.carins.model.Claim;
-import com.example.carins.model.InsurancePolicy;
 import com.example.carins.service.CarService;
 import com.example.carins.web.dto.CarDto;
 import com.example.carins.web.dto.ClaimDto;
-import com.example.carins.web.dto.InsurancePolicyDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +13,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +30,26 @@ public class CarController {
     @GetMapping("/cars")
     public List<CarDto> getCars() {
         return service.listCars().stream().map(this::toCarDto).toList();
+    }
+
+    @GetMapping("/cars/{id}")
+    public ResponseEntity<CarDto> getCar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findCarById(id));
+    }
+
+    @PostMapping("/cars")
+    public ResponseEntity<CarDto> create(@Valid @RequestBody CarDto dto) {
+        CarDto c = service.create(dto);
+        URI locationHeader = URI.create("/api/cars/" + c.id());
+
+        return ResponseEntity
+                .created(locationHeader)
+                .body(c);
+    }
+
+    @PutMapping("/cars/{id}")
+    public CarDto update(@PathVariable Long id, @Valid @RequestBody CarDto dto) {
+        return service.update(id, dto);
     }
 
     @GetMapping("/cars/{carId}/history")
@@ -60,7 +77,7 @@ public class CarController {
 
     @GetMapping("/claims/{id}")
     public ResponseEntity<ClaimDto> getInsurance(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+        return ResponseEntity.ok(service.findClaimById(id));
     }
 
     @PostMapping("/cars/{carId}/claims")

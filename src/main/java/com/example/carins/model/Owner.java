@@ -15,7 +15,10 @@ public class Owner {
     private String email;
 
     public Owner() {}
-    public Owner(String name, String email) { this.name = name; this.email = email; }
+    public Owner(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 
     public Long getId() { return id; }
     public String getName() { return name; }

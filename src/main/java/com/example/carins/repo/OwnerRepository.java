@@ -5,6 +5,9 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OwnerRepository extends JpaRepository<Owner, Long> {}
+public interface OwnerRepository extends JpaRepository<Owner, Long> {
+    boolean existsByEmailIgnoreCase(String email);
+    boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
+}
 
 

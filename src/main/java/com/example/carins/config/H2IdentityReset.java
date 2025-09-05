@@ -18,10 +18,23 @@ public class H2IdentityReset implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
+        //max(InsuranceId)
         Long maxId = jdbc.queryForObject(
                 "select coalesce(max(id), 0) from insurancepolicy", Long.class);
-        long next = (maxId == null ? 0L : maxId) + 1L;
+        long next = maxId + 1L;
         jdbc.execute("ALTER TABLE insurancepolicy ALTER COLUMN id RESTART WITH " + next);
+
+        //max(OwnerId)
+        maxId = jdbc.queryForObject(
+                "select coalesce(max(id), 0) from owner", Long.class);
+        next = maxId + 1L;
+        jdbc.execute("ALTER TABLE owner ALTER COLUMN id RESTART WITH " + next);
+
+        //max(CarId)
+        maxId = jdbc.queryForObject(
+                "select coalesce(max(id), 0) from car", Long.class);
+        next = maxId + 1L;
+        jdbc.execute("ALTER TABLE car ALTER COLUMN id RESTART WITH " + next);
 
         jdbc.execute("""
             update insurancepolicy

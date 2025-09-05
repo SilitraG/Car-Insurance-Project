@@ -1,8 +1,6 @@
 package com.example.carins.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -19,17 +17,12 @@ public class InsurancePolicy {
     private LocalDate startDate;
     private LocalDate endDate; // nullable == open-ended
 
-    @PrePersist
-    @PreUpdate
-    private void ensureEndDate() {
-        if (endDate == null && startDate != null) {
-            endDate = startDate.plusYears(1);
-        }
-    }
-
     public InsurancePolicy() {}
     public InsurancePolicy(Car car, String provider, LocalDate startDate, LocalDate endDate) {
-        this.car = car; this.provider = provider; this.startDate = startDate; this.endDate = endDate;
+        this.car = car;
+        this.provider = provider;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Long getId() { return id; }

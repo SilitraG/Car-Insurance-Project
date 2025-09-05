@@ -10,7 +10,7 @@ public class Car {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank @Size(min = 5, max = 32)
+    @NotBlank @Size(min = 8, max = 8)
     private String vin;
 
     private String make;
@@ -22,12 +22,16 @@ public class Car {
 
     public Car() {}
     public Car(String vin, String make, String model, int yearOfManufacture, Owner owner) {
-        this.vin = vin; this.make = make; this.model = model; this.yearOfManufacture = yearOfManufacture; this.owner = owner;
+        this.vin = vin;
+        this.make = make;
+        this.model = model;
+        this.yearOfManufacture = yearOfManufacture;
+        this.owner = owner;
     }
 
     public Long getId() { return id; }
     public String getVin() { return vin; }
-    public void setVin(String vin) { this.vin = vin; }
+    public void setVin(String vin) { this.vin = vin != null ? vin.trim().toUpperCase() : null;; }
     public String getMake() { return make; }
     public void setMake(String make) { this.make = make; }
     public String getModel() { return model; }
