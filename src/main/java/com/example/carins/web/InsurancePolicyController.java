@@ -1,21 +1,14 @@
 package com.example.carins.web;
 
-import com.example.carins.model.Car;
 import com.example.carins.model.InsurancePolicy;
 import com.example.carins.service.InsurancePolicyService;
-import com.example.carins.web.dto.CarDto;
 import com.example.carins.web.dto.InsurancePolicyDto;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
 
 @RestController
 @RequestMapping("/api")
@@ -32,7 +25,12 @@ public class InsurancePolicyController {
         return insuranceService.listInsurances().stream().map(this::toDto).toList();
     }
 
-    @PostMapping("/insurance")
+    @GetMapping("/insurances/{id}")
+    public ResponseEntity<InsurancePolicyDto> getInsurance(@PathVariable Long id) {
+        return ResponseEntity.ok(insuranceService.findById(id));
+    }
+
+    @PostMapping("/insurances")
     public ResponseEntity<InsurancePolicyDto> createInsurance(@Valid @RequestBody InsurancePolicyDto insuranceDto){
         InsurancePolicyDto i = insuranceService.create(insuranceDto);
         URI locationHeader = URI.create("/api/insurances/" + i.id());
@@ -42,7 +40,7 @@ public class InsurancePolicyController {
                         .body(i);
     }
 
-    @PutMapping("insurance/{id}")
+    @PutMapping("insurances/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody InsurancePolicyDto dto) {
             return ResponseEntity.ok(insuranceService.update(id, dto));
     }

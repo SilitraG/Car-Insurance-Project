@@ -28,6 +28,14 @@ public class InsurancePolicyService {
         return policyRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public InsurancePolicyDto findById(Long id) {
+        InsurancePolicy policy = policyRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Insurance policy with id " + id + " not found!"));
+
+        return toDto(policy);
+    }
+
     @Transactional
     public InsurancePolicyDto create(InsurancePolicyDto dto) {
         Car car = carRepository.findById(dto.carId())
