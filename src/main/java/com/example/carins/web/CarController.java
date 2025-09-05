@@ -13,13 +13,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
 public class CarController {
 
     private final CarService service;
+
+    private static final LocalDate minDate = LocalDate.of(1900, 1, 1);
+    private static final LocalDate maxDate = LocalDate.of(2100, 12, 31);
 
     public CarController(CarService service) {
         this.service = service;
@@ -37,8 +42,18 @@ public class CarController {
 
     @GetMapping("/cars/{carId}/insurance-valid")
     public ResponseEntity<?> isInsuranceValid(@PathVariable Long carId, @RequestParam String date) {
-        // TODO: validate date format and handle errors consistently
-        LocalDate d = LocalDate.parse(date);
+        final LocalDate d;
+
+        try {
+            d = LocalDate.parse(date);
+        } catch (DateTimeParseException ex) {
+            throw new IllegalArgumentException("Invalid date format. Use ISO YYYY-MM-DD format");
+        }
+
+        if (d.isBefore(minDate) || d.isAfter(maxDate)) {
+            throw new IllegalArgumentException("Date out of supported range [" + minDate + ", " + maxDate + "]");
+        }
+
         boolean valid = service.isInsuranceValid(carId, d);
         return ResponseEntity.ok(new InsuranceValidityResponse(carId, d.toString(), valid));
     }
@@ -46,12 +61,6 @@ public class CarController {
     @GetMapping("/claims/{id}")
     public ResponseEntity<ClaimDto> getInsurance(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<ClaimDto> create(@PathVariable Long carId, @Valid @RequestBody ClaimDto body) {
-        ClaimDto dto = new ClaimDto(null, carId, body.claimDate(), body.description(), body.amount());
-        return ResponseEntity.status(201).body(service.create(dto));
     }
 
     @PostMapping("/cars/{carId}/claims")
